@@ -199,20 +199,36 @@ For each algorithm, test:
    - ✅ Generates new data
    - ✅ Resets visualization
 
-8. **Code Toggle**
+8. **Custom Input Button**
+   - ✅ Opens modal for custom input
+   - ✅ Accepts comma-separated numbers
+   - ✅ Validates input (5-200 values)
+   - ✅ Shows error for invalid input
+   - ✅ Applies custom data to visualization
+   - ✅ Works for sorting algorithms
+   - ✅ Works for search algorithms (first value = target)
+   - ✅ Can cancel/close modal
+   - ✅ Test inputs:
+     - Valid: `42, 17, 8, 91, 23, 56, 4, 78, 12, 99`
+     - Invalid: `abc, def` (shows error)
+     - Too few: `1, 2, 3` (shows error)
+     - Edge: Exactly 5 values (should work)
+     - Edge: Exactly 200 values (should work)
+
+9. **Code Toggle**
    - ✅ Shows/hides code snippet
    - ✅ Code is syntax-highlighted (monospace)
 
-9. **Links**
+10. **Links**
    - ✅ Wikipedia link works
    - ✅ Related algorithms display
    - ✅ Related algorithm links work
 
-10. **Share Button**
+11. **Share Button**
     - ✅ Copies URL to clipboard
     - ✅ Shows confirmation
 
-11. **Screenshot Button**
+12. **Screenshot Button**
     - ✅ Downloads PNG image
     - ✅ Image shows current visualization state
 

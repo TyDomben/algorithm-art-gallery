@@ -56,6 +56,7 @@ Choose from 7 stunning visual themes:
 - 🎚️ **Speed Control** - Adjust from 0.25x to 4x speed
 - 🔄 **Reset** - Start from beginning
 - 🎲 **Randomize** - Generate new data
+- ✏️ **Custom Input** - Enter your own data to visualize
 - 🎨 **Theme Selector** - Switch visual styles on the fly
 - 📸 **Screenshot** - Export high-quality images
 - 📤 **Share** - Generate shareable links

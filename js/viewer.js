@@ -165,6 +165,103 @@ function setupControls() {
         updateStats();
     });
 
+    // Custom Input Modal
+    const customInputModal = document.getElementById('customInputModal');
+    const customInputBtn = document.getElementById('customInputBtn');
+    const closeModalBtn = document.getElementById('closeModalBtn');
+    const cancelCustomInput = document.getElementById('cancelCustomInput');
+    const applyCustomInput = document.getElementById('applyCustomInput');
+    const customInputArea = document.getElementById('customInputArea');
+    const inputError = document.getElementById('inputError');
+
+    // Show modal
+    customInputBtn.addEventListener('click', () => {
+        customInputModal.classList.remove('hidden');
+        customInputArea.focus();
+    });
+
+    // Close modal handlers
+    closeModalBtn.addEventListener('click', () => {
+        customInputModal.classList.add('hidden');
+        inputError.classList.add('hidden');
+    });
+
+    cancelCustomInput.addEventListener('click', () => {
+        customInputModal.classList.add('hidden');
+        inputError.classList.add('hidden');
+    });
+
+    // Apply custom input
+    applyCustomInput.addEventListener('click', () => {
+        if (!currentVisualizer) return;
+
+        const input = customInputArea.value.trim();
+        if (!input) {
+            showInputError('Please enter some values');
+            return;
+        }
+
+        // Parse comma-separated values
+        const values = input.split(',').map(v => v.trim()).filter(v => v !== '');
+        const numbers = values.map(v => parseFloat(v));
+
+        // Validation
+        if (numbers.some(n => isNaN(n))) {
+            showInputError('Please enter valid numbers only');
+            return;
+        }
+
+        if (numbers.length < 5) {
+            showInputError('Please enter at least 5 values');
+            return;
+        }
+
+        if (numbers.length > 200) {
+            showInputError('Please enter no more than 200 values');
+            return;
+        }
+
+        // Apply custom data
+        try {
+            currentVisualizer.stop();
+
+            // For sorting algorithms, use the numbers directly
+            if (currentAlgorithm.category === 'sorting') {
+                currentVisualizer.data = numbers;
+                currentVisualizer.calculateSteps();
+            }
+            // For search algorithms (like binary search), use sorted data and first number as target
+            else if (currentAlgorithm.id === 'binary-search') {
+                const sorted = [...numbers].sort((a, b) => a - b);
+                currentVisualizer.data = sorted;
+                currentVisualizer.target = numbers[0]; // First number is the target
+                currentVisualizer.calculateSteps();
+            }
+            // For other algorithms, use default generation with custom size
+            else {
+                currentVisualizer.generateData(numbers.length);
+            }
+
+            currentVisualizer.currentStepIndex = 0;
+            currentVisualizer.reset();
+            currentVisualizer.render();
+            updateStats();
+
+            // Close modal and clear error
+            customInputModal.classList.add('hidden');
+            inputError.classList.add('hidden');
+            customInputArea.value = '';
+
+        } catch (error) {
+            showInputError('Error applying input: ' + error.message);
+        }
+    });
+
+    function showInputError(message) {
+        inputError.textContent = message;
+        inputError.classList.remove('hidden');
+    }
+
     // Code toggle
     document.getElementById('codeToggle').addEventListener('click', () => {
         const codeSnippet = document.getElementById('codeSnippet');
