@@ -151,10 +151,15 @@ function initializePreviews() {
 
 // Render mini preview on card
 function renderMiniPreview(canvas, algo) {
+    if (!canvas) return;
+
     const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
     const width = canvas.width;
     const height = canvas.height;
 
+    // Clear canvas
     ctx.fillStyle = '#0a0a0a';
     ctx.fillRect(0, 0, width, height);
 

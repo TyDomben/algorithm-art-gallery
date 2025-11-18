@@ -25,23 +25,27 @@ class VisualizationFramework {
         const container = this.canvas.parentElement;
         const rect = container.getBoundingClientRect();
 
-        // Set canvas size to match container
-        this.canvas.width = Math.min(rect.width, 1200);
-        this.canvas.height = Math.min(rect.height, 800);
+        // Calculate display size
+        const displayWidth = Math.min(rect.width, 1200);
+        const displayHeight = Math.min(rect.height, 800);
 
         // Enable high DPI
         const dpr = window.devicePixelRatio || 1;
-        const rect2 = this.canvas.getBoundingClientRect();
 
-        this.canvas.width = rect2.width * dpr;
-        this.canvas.height = rect2.height * dpr;
+        // Set actual canvas size (with DPI scaling)
+        this.canvas.width = displayWidth * dpr;
+        this.canvas.height = displayHeight * dpr;
+
+        // Set display size
+        this.canvas.style.width = displayWidth + 'px';
+        this.canvas.style.height = displayHeight + 'px';
+
+        // Scale context to match DPI
         this.ctx.scale(dpr, dpr);
 
-        this.canvas.style.width = rect2.width + 'px';
-        this.canvas.style.height = rect2.height + 'px';
-
-        this.width = rect2.width;
-        this.height = rect2.height;
+        // Store dimensions for drawing
+        this.width = displayWidth;
+        this.height = displayHeight;
     }
 
     clear() {

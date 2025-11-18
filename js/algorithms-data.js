@@ -586,48 +586,6 @@ console.log(\`Solved in \${solution.length} moves\`);`
     return triangle;
 }`
     },
-
-    // Additional interesting algorithms
-    {
-        id: 'delaunay',
-        name: 'Delaunay Triangulation',
-        category: 'math',
-        difficulty: 'advanced',
-        description: 'Points connect to form a beautiful mesh of triangles, maximizing the minimum angles for optimal coverage.',
-        timeComplexity: 'O(n log n)',
-        spaceComplexity: 'O(n)',
-        featured: false,
-        wikiLink: 'https://en.wikipedia.org/wiki/Delaunay_triangulation',
-        related: ['voronoi', 'triangulation'],
-        code: `// Delaunay triangulation using Bowyer-Watson algorithm
-function delaunay(points) {
-    // Create super-triangle containing all points
-    const superTriangle = createSuperTriangle(points);
-    const triangles = [superTriangle];
-
-    for (const point of points) {
-        const badTriangles = [];
-
-        for (const triangle of triangles) {
-            if (inCircumcircle(point, triangle)) {
-                badTriangles.push(triangle);
-            }
-        }
-
-        const polygon = getPolygonEdges(badTriangles);
-
-        // Remove bad triangles
-        triangles = triangles.filter(t => !badTriangles.includes(t));
-
-        // Add new triangles
-        for (const edge of polygon) {
-            triangles.push(createTriangle(edge, point));
-        }
-    }
-
-    return triangles;
-}`
-    },
     {
         id: 'perlin-noise',
         name: 'Perlin Noise Flow',

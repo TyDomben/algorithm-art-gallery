@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quick Demo - Algorithm Art Gallery</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="css/styles.css">
+    <style>
+        body { margin: 0; padding: 0; overflow: hidden; }
+        #fullCanvas { display: block; }
+    </style>
+</head>
+<body class="bg-gray-950">
+    <div class="fixed top-4 left-4 z-50 bg-gray-900/90 backdrop-blur-sm rounded-lg px-4 py-3">
+        <h1 class="text-xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent mb-2">
+            Algorithm Art Gallery - Quick Demo
+        </h1>
+        <div class="flex gap-2 mb-2">
+            <select id="algoSelect" class="px-3 py-2 rounded-lg bg-gray-800 text-white border border-gray-700 text-sm">
+                <option value="bubble-sort">Bubble Sort</option>
+                <option value="quick-sort">Quick Sort</option>
+                <option value="merge-sort">Merge Sort</option>
+                <option value="binary-search">Binary Search</option>
+                <option value="mandelbrot">Mandelbrot Set</option>
+                <option value="game-of-life">Game of Life</option>
+                <option value="fibonacci-spiral">Fibonacci Spiral</option>
+                <option value="voronoi">Voronoi Diagram</option>
+                <option value="a-star">A* Pathfinding</option>
+                <option value="towers-of-hanoi">Towers of Hanoi</option>
+            </select>
+            <button id="playBtn" class="px-4 py-2 rounded-lg bg-purple-600 hover:bg-purple-700 text-white text-sm font-semibold">
+                ▶ Play
+            </button>
+            <button id="resetBtn" class="px-4 py-2 rounded-lg bg-gray-700 hover:bg-gray-600 text-white text-sm">
+                🔄 Reset
+            </button>
+        </div>
+        <p class="text-xs text-gray-400">
+            Space: Play/Pause • R: Reset • → : Step Forward
+            <br>
+            <a href="index.html" class="text-purple-400 hover:text-purple-300">← Full Gallery</a>
+        </p>
+    </div>
+
+    <canvas id="fullCanvas"></canvas>
+
+    <script src="js/themes.js"></script>
+    <script src="js/framework.js"></script>
+    <script src="js/algorithms-data.js"></script>
+    <script src="js/algorithms/sorting.js"></script>
+    <script src="js/algorithms/search.js"></script>
+    <script src="js/algorithms/math.js"></script>
+    <script src="js/algorithms/graph.js"></script>
+    <script src="js/algorithms/classic.js"></script>
+
+    <script>
+        let visualizer = null;
+        const canvas = document.getElementById('fullCanvas');
+        const ctx = canvas.getContext('2d');
+
+        // Setup canvas to fill window
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            if (visualizer) {
+                visualizer.setupCanvas();
+                visualizer.render();
+            }
+        }
+
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        // Initialize visualizer
+        function initVisualizer(algoId) {
+            if (visualizer) {
+                visualizer.stop();
+            }
+
+            canvas.id = 'visualCanvas-' + Date.now();
+
+            switch(algoId) {
+                case 'bubble-sort':
+                    visualizer = new BubbleSortVisualizer(canvas.id);
+                    visualizer.generateData(60);
+                    break;
+                case 'quick-sort':
+                    visualizer = new QuickSortVisualizer(canvas.id);
+                    visualizer.generateData(60);
+                    break;
+                case 'merge-sort':
+                    visualizer = new MergeSortVisualizer(canvas.id);
+                    visualizer.generateData(60);
+                    break;
+                case 'binary-search':
+                    visualizer = new BinarySearchVisualizer(canvas.id);
+                    visualizer.generateData(60);
+                    break;
+                case 'mandelbrot':
+                    visualizer = new MandelbrotVisualizer(canvas.id);
+                    visualizer.generateData();
+                    break;
+                case 'game-of-life':
+                    visualizer = new GameOfLifeVisualizer(canvas.id);
+                    visualizer.generateData(80);
+                    break;
+                case 'fibonacci-spiral':
+                    visualizer = new FibonacciSpiralVisualizer(canvas.id);
+                    visualizer.generateData(15);
+                    break;
+                case 'voronoi':
+                    visualizer = new VoronoiVisualizer(canvas.id);
+                    visualizer.generateData(25);
+                    break;
+                case 'a-star':
+                    visualizer = new AStarVisualizer(canvas.id);
+                    visualizer.generateData(30);
+                    break;
+                case 'towers-of-hanoi':
+                    visualizer = new TowersOfHanoiVisualizer(canvas.id);
+                    visualizer.generateData(6);
+                    break;
+            }
+
+            // Override setupCanvas to work with full window canvas
+            visualizer.canvas = canvas;
+            visualizer.ctx = ctx;
+            visualizer.width = canvas.width;
+            visualizer.height = canvas.height;
+            visualizer.setupCanvas = resizeCanvas;
+
+            visualizer.render();
+        }
+
+        // Event listeners
+        document.getElementById('algoSelect').addEventListener('change', (e) => {
+            initVisualizer(e.target.value);
+        });
+
+        document.getElementById('playBtn').addEventListener('click', () => {
+            if (!visualizer) return;
+
+            if (visualizer.isPlaying) {
+                visualizer.pause();
+                document.getElementById('playBtn').innerHTML = '▶ Play';
+            } else {
+                visualizer.play();
+                if (!visualizer.animationId) {
+                    visualizer.start();
+                }
+                document.getElementById('playBtn').innerHTML = '⏸ Pause';
+            }
+        });
+
+        document.getElementById('resetBtn').addEventListener('click', () => {
+            if (!visualizer) return;
+            visualizer.stop();
+            visualizer.reset();
+            visualizer.currentStepIndex = 0;
+            visualizer.render();
+            document.getElementById('playBtn').innerHTML = '▶ Play';
+        });
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', (e) => {
+            if (!visualizer) return;
+
+            switch(e.key.toLowerCase()) {
+                case ' ':
+                    e.preventDefault();
+                    document.getElementById('playBtn').click();
+                    break;
+                case 'r':
+                    e.preventDefault();
+                    document.getElementById('resetBtn').click();
+                    break;
+                case 'arrowright':
+                    e.preventDefault();
+                    visualizer.pause();
+                    visualizer.step();
+                    document.getElementById('playBtn').innerHTML = '▶ Play';
+                    break;
+            }
+        });
+
+        // Initialize with bubble sort
+        initVisualizer('bubble-sort');
+    </script>
+</body>
+</html>

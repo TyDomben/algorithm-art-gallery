@@ -202,8 +202,9 @@ function setupControls() {
 function initializeVisualizer() {
     const canvas = document.getElementById('visualizationCanvas');
 
-    // Create visualizer based on algorithm ID
-    switch (currentAlgorithm.id) {
+    try {
+        // Create visualizer based on algorithm ID
+        switch (currentAlgorithm.id) {
         // Sorting
         case 'bubble-sort':
             currentVisualizer = new BubbleSortVisualizer('visualizationCanvas');
@@ -274,15 +275,31 @@ function initializeVisualizer() {
             currentVisualizer = new RecursiveTreeVisualizer('visualizationCanvas');
             break;
 
-        default:
-            console.error('Unknown algorithm:', currentAlgorithm.id);
-            return;
-    }
+            default:
+                throw new Error(`Unknown algorithm: ${currentAlgorithm.id}`);
+        }
 
-    // Generate initial data
-    const size = parseInt(document.getElementById('sizeSlider')?.value || 50);
-    currentVisualizer.generateData(size);
-    currentVisualizer.render();
+        // Generate initial data
+        const size = parseInt(document.getElementById('sizeSlider')?.value || 50);
+        currentVisualizer.generateData(size);
+        currentVisualizer.render();
+
+    } catch (error) {
+        console.error('Error initializing visualizer:', error);
+
+        // Show error message to user
+        const loadingSpinner = document.getElementById('loadingSpinner');
+        loadingSpinner.innerHTML = `
+            <div class="text-center text-red-400">
+                <div class="text-6xl mb-4">⚠️</div>
+                <h2 class="text-2xl font-bold mb-2">Error Loading Visualization</h2>
+                <p class="text-gray-400 mb-4">${error.message}</p>
+                <a href="index.html" class="px-6 py-3 bg-purple-600 hover:bg-purple-700 rounded-lg inline-block transition-colors">
+                    ← Back to Gallery
+                </a>
+            </div>
+        `;
+    }
 }
 
 // Update statistics display
@@ -299,6 +316,33 @@ window.addEventListener('resize', () => {
     if (currentVisualizer) {
         currentVisualizer.setupCanvas();
         currentVisualizer.render();
+    }
+});
+
+// Keyboard shortcuts
+document.addEventListener('keydown', (e) => {
+    // Ignore if user is typing in an input
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') {
+        return;
+    }
+
+    switch(e.key.toLowerCase()) {
+        case ' ': // Space - Play/Pause
+            e.preventDefault();
+            document.getElementById('playPauseBtn').click();
+            break;
+        case 'arrowright': // → - Next step
+            e.preventDefault();
+            document.getElementById('stepBtn').click();
+            break;
+        case 'r': // R - Reset
+            e.preventDefault();
+            document.getElementById('resetBtn').click();
+            break;
+        case 'd': // D - Randomize data
+            e.preventDefault();
+            document.getElementById('randomizeBtn').click();
+            break;
     }
 });
 

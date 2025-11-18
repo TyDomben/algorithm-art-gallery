@@ -4,11 +4,11 @@
 
 A stunning interactive gallery that visualizes classic programming algorithms as beautiful, educational animations. Each algorithm becomes an interactive artwork that's both educational and aesthetically stunning.
 
-![Algorithm Art Gallery](https://img.shields.io/badge/algorithms-17-purple) ![Status](https://img.shields.io/badge/status-live-success) ![License](https://img.shields.io/badge/license-MIT-blue)
+![Algorithm Art Gallery](https://img.shields.io/badge/algorithms-20-purple) ![Status](https://img.shields.io/badge/status-live-success) ![License](https://img.shields.io/badge/license-MIT-blue)
 
 ## ✨ Features
 
-### 🎭 17 Beautiful Algorithm Visualizations
+### 🎭 20 Beautiful Algorithm Visualizations
 
 #### Sorting Algorithms
 - **Bubble Sort** - Rising bubbles with colors
@@ -94,7 +94,9 @@ cd algorithm-art-gallery
 
 ### Running Locally
 
-Open `index.html` in your favorite modern web browser. That's it!
+**Quick Start:**
+- Open `index.html` for the full gallery experience
+- Open `demo.html` for a quick single-algorithm demo
 
 Or use a simple HTTP server:
 
@@ -117,6 +119,7 @@ Then navigate to `http://localhost:8000`
 algorithm-art-gallery/
 ├── index.html              # Gallery homepage
 ├── algorithm.html          # Algorithm viewer page
+├── demo.html              # Quick demo page
 ├── css/
 │   └── styles.css         # Custom styles
 ├── js/
